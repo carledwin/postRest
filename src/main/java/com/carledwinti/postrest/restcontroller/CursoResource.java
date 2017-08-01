@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +29,27 @@ public class CursoResource {
 	@RequestMapping(value="/cursos", method=RequestMethod.GET)
 	public ResponseEntity<List<Curso>> listar(){
 		return new ResponseEntity<List<Curso>>(new ArrayList<Curso>(cursos.values()), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/cursos/{id}", method=RequestMethod.GET)
+	public ResponseEntity<Curso> buscar(@PathVariable("id") Integer id){
+		Curso curso = cursos.get(id);
+		
+		if(curso == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<Curso>(curso, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/cursos/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<?>deletar(@PathVariable("id")Integer id){
+		Curso curso = cursos.remove(id);
+		
+		if(curso == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<Curso>(HttpStatus.NO_CONTENT);
 	}
 }
